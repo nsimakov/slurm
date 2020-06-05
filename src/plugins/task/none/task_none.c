@@ -116,7 +116,8 @@ extern int task_p_slurmd_launch_request (launch_tasks_request_msg_t *req,
 extern int task_p_slurmd_reserve_resources (launch_tasks_request_msg_t *req,
 					    uint32_t node_id)
 {
-	debug("task_p_slurmd_reserve_resources: %u %u", req->job_id, node_id);
+	debug("task_p_slurmd_reserve_resources: %u %u",
+	      req->step_id.job_id, node_id);
 	return SLURM_SUCCESS;
 }
 
@@ -165,7 +166,7 @@ extern int task_p_pre_setuid (stepd_step_rec_t *job)
 extern int task_p_pre_launch (stepd_step_rec_t *job)
 {
 	debug("task_p_pre_launch: %u.%u, task %d",
-	      job->jobid, job->stepid, job->envtp->procid);
+	      job->step_id.job_id, job->step_id.step_id, job->envtp->procid);
 	return SLURM_SUCCESS;
 }
 
@@ -176,7 +177,7 @@ extern int task_p_pre_launch (stepd_step_rec_t *job)
 extern int task_p_pre_launch_priv(stepd_step_rec_t *job, pid_t pid)
 {
 	debug("task_p_pre_launch_priv: %u.%u",
-	      job->jobid, job->stepid);
+	      job->step_id.job_id, job->step_id.step_id);
 	return SLURM_SUCCESS;
 }
 
@@ -188,7 +189,7 @@ extern int task_p_pre_launch_priv(stepd_step_rec_t *job, pid_t pid)
 extern int task_p_post_term (stepd_step_rec_t *job, stepd_step_task_info_t *task)
 {
 	debug("task_p_post_term: %u.%u, task %d",
-	      job->jobid, job->stepid, task->id);
+	      job->step_id.job_id, job->step_id.step_id, task->id);
 	return SLURM_SUCCESS;
 }
 

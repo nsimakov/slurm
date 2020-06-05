@@ -214,7 +214,7 @@ extern int task_p_slurmd_launch_request (launch_tasks_request_msg_t *req,
 extern int task_p_slurmd_reserve_resources (launch_tasks_request_msg_t *req,
 					    uint32_t node_id)
 {
-	debug("task_p_slurmd_reserve_resources: %u", req->job_id);
+	debug("task_p_slurmd_reserve_resources: %u", req->step_id.job_id);
 	return SLURM_SUCCESS;
 }
 
@@ -331,13 +331,13 @@ extern int task_p_pre_setuid (stepd_step_rec_t *job)
 		if (snprintf(path, PATH_MAX, "%s/slurm_%s_%u",
 			     CPUSET_DIR,
 			     (conf->node_name != NULL)?conf->node_name:"",
-			     job->jobid) > PATH_MAX) {
+			     job->step_id.job_id) > PATH_MAX) {
 			error("%s: cpuset path too long", __func__);
 			rc = SLURM_ERROR;
 		}
 #else
 		if (snprintf(path, PATH_MAX, "%s/slurm%u",
-			     CPUSET_DIR, job->jobid) > PATH_MAX) {
+			     CPUSET_DIR, job->step_id.job_id) > PATH_MAX) {
 			error("%s: cpuset path too long", __func__);
 			rc = SLURM_ERROR;
 		}
@@ -383,7 +383,7 @@ extern int task_p_pre_launch (stepd_step_rec_t *job)
 	int rc = SLURM_SUCCESS;
 
 	debug("%s: affinity jobid %u.%u, task:%u bind:%u",
-		  __func__, job->jobid, job->stepid,
+		  __func__, job->step_id.job_id, job->step_id.job_id,
 		  job->envtp->procid, job->cpu_bind_type);
 
 	if (slurm_conf.task_plugin_param & CPU_BIND_CPUSETS) {
@@ -392,19 +392,19 @@ extern int task_p_pre_launch (stepd_step_rec_t *job)
 		if (snprintf(base, PATH_MAX, "%s/slurm_%s_%u",
 					 CPUSET_DIR,
 					 (conf->node_name != NULL)?conf->node_name:"",
-					 job->jobid) >= PATH_MAX) {
+					 job->step_id.job_id) >= PATH_MAX) {
 			error("%s: cpuset path too long", __func__);
 			return SLURM_ERROR;
 		}
 #else
 		if (snprintf(base, PATH_MAX, "%s/slurm%u",
-					 CPUSET_DIR, job->jobid) >= PATH_MAX) {
+			     CPUSET_DIR, job->step_id.job_id) >= PATH_MAX) {
 			error("%s: cpuset path too long", __func__);
 			return SLURM_ERROR;
 		}
 #endif
 		if (snprintf(path, PATH_MAX, "%s/slurm%u.%u_%d",
-					 base, job->jobid, job->stepid,
+					 base, job->step_id.job_id, job->step_id.job_id,
 					 job->envtp->localid) >= PATH_MAX) {
 			error("%s: cpuset path too long", __func__);
 			return SLURM_ERROR;
@@ -505,7 +505,7 @@ extern int task_p_post_term (stepd_step_rec_t *job, stepd_step_task_info_t *task
 {
 		char base[PATH_MAX], path[PATH_MAX];
 	debug("%s: affinity %u.%u, task %d",
-	      __func__, job->jobid, job->stepid, task->id);
+	      __func__, job->step_id.job_id, job->step_id.job_id, task->id);
 
 #if PURGE_CPUSET_DIRS
 	/* NOTE: The notify_on_release flag set in cpuset.c
@@ -518,19 +518,19 @@ extern int task_p_post_term (stepd_step_rec_t *job, stepd_step_task_info_t *task
 	if (snprintf(base, PATH_MAX, "%s/slurm_%s_%u",
 				 CPUSET_DIR,
 				 (conf->node_name != NULL)?conf->node_name:"",
-				 job->jobid) >= PATH_MAX) {
+				 job->step_id.job_id) >= PATH_MAX) {
 		error("%s: cpuset path too long", __func__);
 		return SLURM_ERROR;
 	}
 #else
 	if (snprintf(base, PATH_MAX, "%s/slurm%u",
-				 CPUSET_DIR, job->jobid) >= PATH_MAX) {
+				 CPUSET_DIR, job->step_id.job_id) >= PATH_MAX) {
 		error("%s: cpuset path too long", __func__);
 		return SLURM_ERROR;
 	}
 #endif
 	if (snprintf(path, PATH_MAX, "%s/slurm%u.%u_%d",
-				 base, job->jobid, job->stepid,
+				 base, job->step_id.job_id, job->step_id.job_id,
 				 task->id) >= PATH_MAX) {
 		error("%s: cpuset path too long", __func__);
 		return SLURM_ERROR;
