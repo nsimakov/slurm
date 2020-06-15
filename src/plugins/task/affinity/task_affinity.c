@@ -382,9 +382,8 @@ extern int task_p_pre_launch (stepd_step_rec_t *job)
 	char base[PATH_MAX], path[PATH_MAX];
 	int rc = SLURM_SUCCESS;
 
-	debug("%s: affinity jobid %u.%u, task:%u bind:%u",
-		  __func__, job->step_id.job_id, job->step_id.job_id,
-		  job->envtp->procid, job->cpu_bind_type);
+	debug("%s: affinity %ps, task:%u bind:%u",
+	      __func__, &job->step_id, job->envtp->procid, job->cpu_bind_type);
 
 	if (slurm_conf.task_plugin_param & CPU_BIND_CPUSETS) {
 		info("%s: Using cpuset affinity for tasks", __func__);
@@ -504,8 +503,7 @@ extern int task_p_pre_launch_priv(stepd_step_rec_t *job, pid_t pid)
 extern int task_p_post_term (stepd_step_rec_t *job, stepd_step_task_info_t *task)
 {
 		char base[PATH_MAX], path[PATH_MAX];
-	debug("%s: affinity %u.%u, task %d",
-	      __func__, job->step_id.job_id, job->step_id.job_id, task->id);
+	debug("%s: affinity %ps, task %d", __func__, &job->step_id, task->id);
 
 #if PURGE_CPUSET_DIRS
 	/* NOTE: The notify_on_release flag set in cpuset.c

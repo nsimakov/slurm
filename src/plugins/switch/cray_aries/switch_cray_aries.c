@@ -792,8 +792,8 @@ extern int switch_p_job_postfini(stepd_step_rec_t *job)
 		CRAY_DEBUG("Sending SIGKILL to pgid %lu", (unsigned long) pgid);
 		kill(-pgid, SIGKILL);
 	} else
-		CRAY_INFO("Job %u.%u: Bad pid value %lu",
-			  job->jobid, job->stepid, (unsigned long) pgid);
+		CRAY_INFO("%ps: Bad pid value %lu",
+			  &job->step_id, (unsigned long) pgid);
 	/*
 	 * Clean-up
 	 *
@@ -968,8 +968,7 @@ extern int switch_p_slurmd_step_init(void)
 extern int switch_p_job_step_pre_suspend(stepd_step_rec_t *job)
 {
 #if _DEBUG
-	info("switch_p_job_step_pre_suspend(job %u.%u)",
-		job->jobid, job->stepid);
+	info("switch_p_job_step_pre_suspend(%ps)", &job->step_id);
 #endif
 #if defined(HAVE_NATIVE_CRAY) && !defined(HAVE_CRAY_NETWORK)
 	slurm_cray_jobinfo_t *jobinfo = job->switch_job ?
@@ -996,8 +995,7 @@ extern int switch_p_job_step_pre_suspend(stepd_step_rec_t *job)
 extern int switch_p_job_step_post_suspend(stepd_step_rec_t *job)
 {
 #if _DEBUG
-	info("switch_p_job_step_post_suspend(job %u.%u)",
-		job->jobid, job->stepid);
+	info("switch_p_job_step_post_suspend(%ps)", &job->step_id);
 #endif
 #if defined(HAVE_NATIVE_CRAY) && !defined(HAVE_CRAY_NETWORK)
 	char *err_msg = NULL;
@@ -1021,8 +1019,7 @@ extern int switch_p_job_step_post_suspend(stepd_step_rec_t *job)
 extern int switch_p_job_step_pre_resume(stepd_step_rec_t *job)
 {
 #if _DEBUG
-	info("switch_p_job_step_pre_resume(job %u.%u)",
-		job->jobid, job->stepid);
+	info("switch_p_job_step_pre_resume(%ps)", &job->step_id);
 #endif
 #if defined(HAVE_NATIVE_CRAY) && !defined(HAVE_CRAY_NETWORK)
 	slurm_cray_jobinfo_t *jobinfo = job->switch_job ?
@@ -1049,8 +1046,7 @@ extern int switch_p_job_step_pre_resume(stepd_step_rec_t *job)
 extern int switch_p_job_step_post_resume(stepd_step_rec_t *job)
 {
 #if _DEBUG
-	info("switch_p_job_step_post_resume(job %u.%u)",
-		job->jobid, job->stepid);
+	info("switch_p_job_step_post_resume(%ps)", &job->step_id);
 #endif
 #if defined(HAVE_NATIVE_CRAY) && !defined(HAVE_CRAY_NETWORK)
 	char *err_msg = NULL;

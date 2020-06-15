@@ -1229,8 +1229,8 @@ _exit_handler(struct step_launch_state *sls, slurm_msg_t *exit_msg)
 
 	if ((msg->step_id.job_id != sls->mpi_info->jobid) ||
 	    (msg->step_id.step_id != sls->mpi_info->stepid)) {
-		debug("Received MESSAGE_TASK_EXIT from wrong job: %u.%u",
-		      msg->step_id.job_id, msg->step_id.step_id);
+		debug("Received MESSAGE_TASK_EXIT from wrong job: %ps",
+		      &msg->step_id);
 		return;
 	}
 
@@ -1268,8 +1268,7 @@ _job_complete_handler(struct step_launch_state *sls, slurm_msg_t *complete_msg)
 		verbose("Complete job %u received",
 			step_msg->job_id);
 	} else {
-		verbose("Complete job step %u.%u received",
-			step_msg->job_id, step_msg->step_id);
+		verbose("Complete %ps received", &step_msg->step_id);
 	}
 
 	if (sls->callback.step_complete)
@@ -1388,9 +1387,8 @@ _step_missing_handler(struct step_launch_state *sls, slurm_msg_t *missing_msg)
 	int   num_tasks;
 	bool  active;
 
-	debug("Step %u.%u missing from node(s) %s",
-	      step_missing->step_id.job_id, step_missing->step_id.step_id,
-	      step_missing->nodelist);
+	debug("Step %ps missing from node(s) %s",
+	      &step_missing->step_id, step_missing->nodelist);
 
 	/* Ignore this message in the unusual "user_managed_io" case.  No way
 	   to confirm a bad connection, since a test message goes straight to
@@ -1506,8 +1504,8 @@ static void
 _step_step_signal(struct step_launch_state *sls, slurm_msg_t *signal_msg)
 {
 	job_step_kill_msg_t *step_signal = signal_msg->data;
-	debug2("Signal %u requested for step %u.%u", step_signal->signal,
-	       step_signal->step_id.job_id, step_signal->step_id.step_id);
+	debug2("Signal %u requested for step %ps", step_signal->signal,
+	       &step_signal->step_id);
 	if (sls->callback.step_signal)
 		(sls->callback.step_signal)(step_signal->signal);
 
@@ -1801,9 +1799,8 @@ static void _print_launch_msg(launch_tasks_request_msg_t *msg,
 	task_list = hostlist_ranged_string_xmalloc(hl);
 	hostlist_destroy(hl);
 
-	info("launching %u.%u on host %s, %u tasks: %s",
-	     msg->step_id.job_id, msg->step_id.step_id, hostname,
-	     msg->tasks_to_launch[nodeid], task_list);
+	info("launching %ps on host %s, %u tasks: %s",
+	     &msg->step_id, hostname, msg->tasks_to_launch[nodeid], task_list);
 	xfree(task_list);
 
 	debug3("uid:%ld gid:%ld cwd:%s %d", (long) msg->uid,
