@@ -803,7 +803,7 @@ _forkexec_slurmstepd(uint16_t type, void *req,
 					NULL};
 		if (type == LAUNCH_BATCH_JOB) {
 			job_id = ((batch_job_launch_msg_t *)req)->job_id;
-			step_id = ((batch_job_launch_msg_t *)req)->step_id;
+			step_id = SLURM_BATCH_SCRIPT;
 		} else if (type == LAUNCH_TASKS) {
 			job_id = ((launch_tasks_request_msg_t *)req)->step_id.job_id;
 			step_id = ((launch_tasks_request_msg_t *)req)->step_id.step_id;
@@ -824,7 +824,7 @@ _forkexec_slurmstepd(uint16_t type, void *req,
 					NULL};
 		if (type == LAUNCH_BATCH_JOB) {
 			job_id = ((batch_job_launch_msg_t *)req)->job_id;
-			step_id = ((batch_job_launch_msg_t *)req)->step_id;
+			step_id = SLURM_BATCH_SCRIPT;
 		} else if (type == LAUNCH_TASKS) {
 			job_id = ((launch_tasks_request_msg_t *)req)->step_id.job_id;
 			step_id = ((launch_tasks_request_msg_t *)req)->step_id.step_id;
@@ -845,7 +845,7 @@ _forkexec_slurmstepd(uint16_t type, void *req,
 					NULL};
 		if (type == LAUNCH_BATCH_JOB) {
 			job_id = ((batch_job_launch_msg_t *)req)->job_id;
-			step_id = ((batch_job_launch_msg_t *)req)->step_id;
+			step_id = SLURM_BATCH_SCRIPT;
 		} else if (type == LAUNCH_TASKS) {
 			job_id = ((launch_tasks_request_msg_t *)req)->step_id.job_id;
 			step_id = ((launch_tasks_request_msg_t *)req)->step_id.step_id;
@@ -2460,7 +2460,7 @@ _rpc_batch_job(slurm_msg_t *msg, bool new_msg)
 					   epi_env_gres_list, node_id);
 		FREE_NULL_LIST(epi_env_gres_list);
 		job_env.jobid = req->job_id;
-		job_env.step_id = req->step_id;
+		job_env.step_id = SLURM_BATCH_SCRIPT;
 		job_env.node_list = req->nodes;
 		job_env.het_job_id = req->het_job_id;
 		job_env.partition = req->partition;

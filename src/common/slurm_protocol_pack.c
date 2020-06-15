@@ -9489,7 +9489,6 @@ _pack_batch_job_launch_msg(batch_job_launch_msg_t * msg, Buf buffer,
 	if (protocol_version >= SLURM_20_11_PROTOCOL_VERSION) {
 		pack32(msg->job_id, buffer);
 		pack32(msg->het_job_id, buffer);
-		pack32(msg->step_id, buffer);
 
 		pack32(msg->uid, buffer);
 		pack32(msg->gid, buffer);
@@ -9556,7 +9555,7 @@ _pack_batch_job_launch_msg(batch_job_launch_msg_t * msg, Buf buffer,
 	} else if (protocol_version >= SLURM_MIN_PROTOCOL_VERSION) {
 		pack32(msg->job_id, buffer);
 		pack32(msg->het_job_id, buffer);
-		pack32(msg->step_id, buffer);
+		pack32(SLURM_BATCH_SCRIPT, buffer);
 
 		pack32(msg->uid, buffer);
 		pack32(msg->gid, buffer);
@@ -9645,7 +9644,6 @@ _unpack_batch_job_launch_msg(batch_job_launch_msg_t ** msg, Buf buffer,
 
 		safe_unpack32(&launch_msg_ptr->job_id, buffer);
 		safe_unpack32(&launch_msg_ptr->het_job_id, buffer);
-		safe_unpack32(&launch_msg_ptr->step_id, buffer);
 		safe_unpack32(&launch_msg_ptr->uid, buffer);
 		safe_unpack32(&launch_msg_ptr->gid, buffer);
 		safe_unpackstr_xmalloc(&launch_msg_ptr->user_name,
@@ -9746,7 +9744,7 @@ _unpack_batch_job_launch_msg(batch_job_launch_msg_t ** msg, Buf buffer,
 
 		safe_unpack32(&launch_msg_ptr->job_id, buffer);
 		safe_unpack32(&launch_msg_ptr->het_job_id, buffer);
-		safe_unpack32(&launch_msg_ptr->step_id, buffer);
+		safe_unpack32(&uint32_tmp, buffer);
 		safe_unpack32(&launch_msg_ptr->uid, buffer);
 		safe_unpack32(&launch_msg_ptr->gid, buffer);
 		safe_unpackstr_xmalloc(&launch_msg_ptr->user_name,
